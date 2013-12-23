@@ -15,10 +15,8 @@ class ParserText(ParserBase):
     def accepted(klass, filedata):
         return True
 
-    def __init__(self, settings, node):
-        self.logger = logging.getLogger('fennec')
-        self.settings = settings
-        self.node = node
+    def __init__(self, context, settings, node):
+        super(ParserText, self).__init__(context, settings, node)
         with open(self.node.path) as f:
             self.content = f.readlines()
 

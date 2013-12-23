@@ -1,4 +1,6 @@
 
+import logging
+
 class ParserBase(object):
     """
     Parser base class
@@ -36,8 +38,11 @@ class ParserBase(object):
                 return True
         return False
 
-    def __init__(self, settings, node):
-        pass
+    def __init__(self, context, settings, node):
+        self.logger = logging.getLogger('fennec')
+        self.context = context
+        self.settings = settings
+        self.node = node
 
     def audit(self):
         for rulename, rulefunct in self.rules.iteritems():

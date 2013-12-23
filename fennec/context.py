@@ -67,7 +67,7 @@ class Context(object):
     def audit(self):
         for node, parsers in self.tests.iteritems():
             for parser in parsers:
-                pars = parser(self.settings, node)
+                pars = parser(self, self.settings, node)
                 self.results.append(pars.audit())
 
 
