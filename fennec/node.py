@@ -1,15 +1,16 @@
 
 import os
 import logging
-from external import python-magic
+import mimetypes
 
 class Node(object):
     """
     A Node is a file of directory. It contains data associated to a file
     and other useful file manipulation information used with fennec.
     """
-    def __init__(self, node_path):
+    def __init__(self, node_path, settings):
         self.logger = logging.getLogger('fennec')
+        self.settings = settings
         # check if exists
         try:
             with open(node_path, 'r'):
@@ -23,5 +24,5 @@ class Node(object):
         except IOError:
            self.logger.error("The \"{0}\" path doesn't exist !".format(node_path))
            raise
-        self.filetype = mimetypes.guess_type(self.path)
-        self.file_dir, self.extension = os.path.splitext(self.path)
+        self.file_type, self.encoding = mimetypes.guess_type(self.path)
+        self.file_name, self.extension = os.path.splitext(os.path.basename(self.path))

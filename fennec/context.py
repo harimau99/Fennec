@@ -1,6 +1,7 @@
 import os
 import logging
 import importlib
+from collections import defaultdict
 from . import node
 
 class Context(object):
@@ -11,7 +12,11 @@ class Context(object):
 
     files = [ ]
 
-    parsers = { }
+    parsers = [ ]
+
+    tests = defaultdict(list)
+
+    results = [ ]
 
     def __init__(self, settings):
         self.logger = logging.getLogger('fennec')
@@ -42,16 +47,28 @@ class Context(object):
         try:
             module = importlib.import_module(name)
         except ImportError:
-            self.logger.error("The {0} parser could not be imported !!".format(parser))
+            self.logger.error("The {0} parser could not be imported !!".format(name))
             raise
-        self.parsers[module.name] = module.Parser
+        self.parsers.append(module.parser)
 
     def load_path(self, file_path):
         try:
             with open(file_path):
-                self.files.append(node.Node(file_path))
+                n = node.Node(file_path, self.settings)
+                self.files.append(n)
                 self.logger.debug("The \"{0}\" path was added".format(file_path))
         except IOError:
             self.logger.error("The \"{0}\" path doesn't exist".format(file_path))
             return
+        for parser in self.parsers:
+            if (parser.accepted(n)):
+                self.tests[n].append(parser)
+
+    def audit(self):
+        for node, parsers in self.tests.iteritems():
+            for parser in parsers:
+                pars = parser(self.settings, node)
+                self.results.append(pars.audit())
+
+
 

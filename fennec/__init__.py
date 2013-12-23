@@ -1,4 +1,4 @@
-VERSION = "0.0.1"
+VERSION = "0.0.2"
 
 __author__ = "Klemen Sever <ksever@student.42.fr>"
 __copyright__ = "Copyright 2013, Klemen Sever"
@@ -9,6 +9,7 @@ __status__ = "Prototype"
 
 import os
 import os.path as path
+import glob
 import inspect
 from settings.settings import Settings
 from logger import Logger
@@ -63,10 +64,17 @@ class Fennec(object):
         """
         Launch code audit process
         """
-        pass
+        self.context.audit()
 
     def clean(self):
         """
         Cleans the logs, traces and temporary files (if there are some)
         """
-        pass
+        log_path = os.path.join(self.settings.get('root_path'), "log", "*")
+        traces_path = os.path.join(self.settings.get('root_path'), "trace", "*")
+        to_remove = glob.glob(log_path)
+        for node in to_remove:
+           os.remove(node)
+        to_remove = glob.glob(traces_path)
+        for node in to_remove:
+           os.remove(node)
