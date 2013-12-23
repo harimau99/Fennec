@@ -1,0 +1,3 @@
+[submodule "fennec/external/magic"]
+	path = fennec/external/magic
+	url = https://github.com/ahupp/python-magic.git

@@ -1,6 +1,7 @@
 
 import os
 import logging
+from external import python-magic
 
 class Node(object):
     """
@@ -22,3 +23,5 @@ class Node(object):
         except IOError:
            self.logger.error("The \"{0}\" path doesn't exist !".format(node_path))
            raise
+        self.filetype = mimetypes.guess_type(self.path)
+        self.file_dir, self.extension = os.path.splitext(self.path)
