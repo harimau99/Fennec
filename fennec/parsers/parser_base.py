@@ -43,6 +43,22 @@ class ParserBase(object):
         self.context = context
         self.settings = settings
         self.node = node
+        with open(self.node.path) as f:
+            self.content_lines = f.readlines()
+        with open(self.node.path) as f:
+            self.content_full = f.read()
+
+    def log(self, level, message, filename = None, line = None):
+        if filename == None:
+            filedesc = self.node.path_fom_cwd
+        else:
+            filedesc = filename
+        if line == None:
+            log_msg = "File \"{0}\" " + message
+            self.logger.log(level, log_msg.format(filedesc))
+        else:
+            log_msg = "File \"{0}\" (line {1}) " + message
+            self.logger.log(level, log_msg.format(filedesc, line))
 
     def audit(self):
         for rulename, rulefunct in self.rules.iteritems():

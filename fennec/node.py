@@ -20,6 +20,7 @@ class Node(object):
                 elif (os.path.isdir(node_path)):
                     self.is_dir = True
                 self.path = os.path.abspath(node_path)
+                self.path_fom_cwd = node_path
                 self.logger.info("The \"{0}\" path exists".format(node_path))
         except IOError:
            self.logger.error("The \"{0}\" path doesn't exist !".format(node_path))

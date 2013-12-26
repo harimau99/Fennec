@@ -24,20 +24,24 @@ class Context(object):
         if (self.settings.get('read_env')):
             self.read_env()
         self.load_parsers()
+        self.create_container()
 
     def read_env(self):
         if (os.environ.get('USER') != None):
             self.user_name = os.environ.get('USER')
         else:
-            self.logger.error("There is no USER environment variable ! You should check your shell !")
+            self.logger.warning("There is no USER environment variable !"
+                                " You should check your shell !")
         if (os.environ.get('GROUP') != None):
             self.user_group = os.environ.get('GROUP')
         else:
-            self.logger.error("There is no GROUP environment variable ! You should check your shell !")
+            self.logger.warning("There is no GROUP environment variable !"
+                                " You should check your shell !")
         if (os.environ.get('MAIL') != None):
             self.user_mail = os.environ.get('MAIL')
         else:
-            self.logger.error("There is no MAIL environment variable ! You should check your shell !")
+            self.logger.warning("There is no MAIL environment variable !"
+                                " You should check your shell !")
 
     def load_parsers(self):
         for parser in self.settings.get('parsers'):
@@ -64,11 +68,28 @@ class Context(object):
             if (parser.accepted(n)):
                 self.tests[n].append(parser)
 
+    def create_container(self):
+        self.container = {
+            'env_user_name': self.user_name,
+            'env_user_group': self.user_group,
+            'env_user_email': self.user_mail,
+            'author': None,
+            'makefile': None,
+            'header': None,
+            'source': None
+        }
+
+    def check_container_consistency(self):
+        # TODO: Must check if author (or authors) are consistent accross files
+        # (author +++, Makefile and header ++, source files +)
+        pass
+
     def audit(self):
         for node, parsers in self.tests.iteritems():
             for parser in parsers:
-                pars = parser(self, self.settings, node)
+                pars = parser(self.container, self.settings, node)
                 self.results.append(pars.audit())
+        self.check_container_consistency()
 
 
 

@@ -18,18 +18,21 @@ class ParserAuthor(ParserBase):
 
     def __init__(self, context, settings, node):
         super(ParserAuthor, self).__init__(context, settings, node)
-        with open(self.node.path) as f:
-            self.content = f.read()
 
     def check_format(self):
         # Double check to prevent missing double \n !! Only way for the moment
-        regexp = re.compile("^[a-z-]{3,8}\n$")
-        test = regexp.search(self.content)
-        regexp2 = re.compile("^[a-z-]{3,8}$")
-        test2 = regexp2.search(self.content)
-        if test == None or test2 == None:
-            self.logger.warning("File {0} isn't correctly formatted.".
-                                    format(self.node.file_name));
+        i = 0;
+        for line in self.content_lines:
+            regexp = re.compile("^[a-z-]{3,8}\n$")
+            test = regexp.search(line)
+            regexp2 = re.compile("^[a-z-]{3,8}$")
+            test2 = regexp2.search(line)
+            if test == None or test2 == None:
+                self.log(logging.CRITICAL, "isn't correctly formatted.")
+
+    def save_author(self):
+        # Save author(s) into context container !
+        pass
 
     rules = { 'format'   : check_format }
 

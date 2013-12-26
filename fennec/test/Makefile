@@ -6,7 +6,7 @@
 #    By: ksever <ksever@student.42.fr>              +#+  +:+       +#+         #
 #                                                +#+#+#+#+#+   +#+             #
 #    Created: 2013/11/19 13:43:22 by ksever            #+#    #+#              #
-#    Updated: 2013/12/13 16:41:41 by ksever           ###   ########.fr        #
+#    Updated: 2013/12/26 21:41:45 by ksever           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,11 +22,11 @@ SRC += ft_ls_argv_files.c ft_ls_argv_dflt_file.c
 SRC += ft_ls_node_create.c ft_ls_node_append.c ft_ls_node_read.c
 SRC += ft_ls_node_swap.c ft_ls_node_is_dots.c ft_ls_node_path_format.c
 SRC += ft_ls_node_previous.c ft_ls_node_del.c ft_ls_node_in_node_lvl.c
-SRC += ft_ls_node_dir_read.c
+SRC += ft_ls_node_dir_read.c	
 SRC += ft_ls_node_lvl_count.c ft_ls_node_lvl_process.c ft_ls_node_lvl_read.c
 SRC += ft_ls_node_lvl_expand.c ft_ls_node_lvl_del.c ft_ls_node_lvl_calc_total.c
 SRC += ft_ls_node_lvl_sort.c ft_ls_node_lvl_sort_reverse.c
-SRC += ft_ls_node_lvl_has_errors.c
+SRC += ft_ls_node_lvl_has_errors.c 
 SRC += ft_ls_sort_name.c ft_ls_sort_time.c
 SRC += ft_ls_disp_node_lvl.c ft_ls_disp_node_lvl_prefix.c
 SRC += ft_ls_disp_node.c ft_ls_disp_node_simple.c ft_ls_disp_node_details.c
@@ -40,12 +40,13 @@ SRC += ft_ls_disp_node_willdisp.c ft_ls_node_read_dispcalc.c
 SRC += ft_ls_disp_error_usage.c ft_ls_disp_error.c ft_ls_disp_perror.c
 SRC += ft_ls_disp_strerror.c
 
-OBJ = $(SRC:.c=.o)
+OBJ = $(SRC:.c=.o) 
 
 CFLAGS = -Wall -Werror -Wextra -pedantic
 OFLAGS = -O3
 
 RM = rm -vf
+	
 
 all: $(NAME)
 
