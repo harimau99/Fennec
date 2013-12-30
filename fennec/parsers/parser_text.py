@@ -40,17 +40,17 @@ class ParserText(ParserBase):
                                             " 80 chars length.", line = i)
 
     def check_trailing_whitespace(self):
-        i = 0;
+        i = 0
         for line in self.content_lines:
             i += 1
             regexp = re.compile("^.*[ \t]+$")
             test = regexp.search(line)
             if test != None:
-                self.log(logging.CRITICAL, "has trailing whitespace(s)"
+                self.log(logging.ERROR, "has trailing whitespace(s)"
                                             " or tab(s)", line = i)
 
     def check_unusual_characters(self):
-        i = 0;
+        i = 0
         for line in self.content_lines:
             i += 1
             regexp = re.compile("[\v\a\b\f\r]+")
@@ -60,14 +60,15 @@ class ParserText(ParserBase):
                                     " Is it intentional ?", line = i)
 
     def check_multi_newline(self):
-        i = 0;
+        i = 0
+        empty_newline = False
         for line in self.content_lines:
             i += 1
             regexp = re.compile("^\n$")
             test = regexp.search(line)
             if test != None:
                 if empty_newline == True:
-                    self.log(logging.CRITICAL,
+                    self.log(logging.ERROR,
                             "has multiple newlines.", line = i)
                 else:
                     empty_newline = True;

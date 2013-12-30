@@ -1,4 +1,4 @@
-VERSION = "0.0.2"
+VERSION = "0.0.3"
 
 __author__ = "Klemen Sever <ksever@student.42.fr>"
 __copyright__ = "Copyright 2013, Klemen Sever"
@@ -54,11 +54,12 @@ class Fennec(object):
                         curr_dir, "config", path_config + '.py'))
             return
         except:
-            self.logger.error("Could not impot configuration file")
+            self.logger.get_logger().error("Could not impot configuration file")
             raise
 
     def add_paths(self, paths):
-        pass
+        for path in paths:
+            self.context.load_path(path)
 
     def audit(self):
         """
@@ -78,3 +79,4 @@ class Fennec(object):
         to_remove = glob.glob(traces_path)
         for node in to_remove:
            os.remove(node)
+        self.logger.get_logger().info("Finished cleaning.")

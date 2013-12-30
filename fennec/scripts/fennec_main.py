@@ -5,6 +5,7 @@ Fennec
 Fennec main
 """
 
+import sys
 import argparse
 
 from .. import __version__
@@ -20,19 +21,29 @@ def fennec_main(root_path):
                         version="fennec " + __version__)
     cli_args.add_argument('--config', '-c', help='configuration file to use.',
                         metavar='<config/file>')
-    cli_args.add_argument('--clean', help='clean logs and traces after audit.',
+    cli_args.add_argument('--clean', help='clean logs and traces of code audit.',
                         action='store_true', default=False)
     cli_args.add_argument('paths', help='path(s) of files or directories to audit.',
-                        nargs='+')
+                        nargs='*')
 
     cli_param = cli_args.parse_args()
+
+    if len(sys.argv) == 1:
+        cli_args.print_help()
+        exit()
+
     # Initialize Fennec and load file paths
     fennec = Fennec(cli_param.paths, root_path)
+
+    if cli_param.clean == True:
+        fennec.clean()
+        print "Done cleaning of log/* and trace/*."
+        exit()
+
     # Set complementary flags
     if cli_param.config != None:
         fennec.set_configfile(cli_param.config)
-    #if cli_param.optionname:
-    #    fennec.set_settings(cli_param.optionname, value):
+
     if cli_param.clean == True:
         fennec.clean()
 

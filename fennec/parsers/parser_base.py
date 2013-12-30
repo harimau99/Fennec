@@ -6,9 +6,9 @@ class ParserBase(object):
     Parser base class
     """
 
-    accepted_filetypes = [ ]
+    accepted_filetypes = [ None ]
 
-    accepted_filenames = [ ]
+    accepted_filenames = [ None ]
 
     rules = { }
 
@@ -38,9 +38,9 @@ class ParserBase(object):
                 return True
         return False
 
-    def __init__(self, context, settings, node):
+    def __init__(self, context_container, settings, node):
         self.logger = logging.getLogger('fennec')
-        self.context = context
+        self.context = context_container
         self.settings = settings
         self.node = node
         with open(self.node.path) as f:
@@ -54,15 +54,19 @@ class ParserBase(object):
         else:
             filedesc = filename
         if line == None:
-            log_msg = "File \"{0}\" " + message
-            self.logger.log(level, log_msg.format(filedesc))
+            log_msg = "File \"{0}\" {1}"
+            self.logger.log(level, log_msg.format(filedesc, message))
         else:
-            log_msg = "File \"{0}\" (line {1}) " + message
-            self.logger.log(level, log_msg.format(filedesc, line))
+            log_msg = "File \"{0}\" (line {1}) {2}"
+            self.logger.log(level, log_msg.format(filedesc, line, message))
+
+    def post_process(self):
+        pass
 
     def audit(self):
         for rulename, rulefunct in self.rules.iteritems():
             rulefunct(self)
+        self.post_process()
 
 name = 'parser_base'
 parser = ParserBase
