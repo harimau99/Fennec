@@ -1,4 +1,13 @@
+"""
+Makefile parser
 
+TODO:
+  - Try compiling and report relinking errors
+  - Remove cheater protection check
+  - check targets for circular calls
+  - check for wildcards (outside comments)
+
+"""
 import logging
 import re
 import time
@@ -12,6 +21,8 @@ class ParserMakefile(ParserBase):
     accepted_filetypes = [ None ]
 
     accepted_filenames = [ 'Makefile' ]
+
+    accepted_extensions = [ None ]
 
     rules = { }
 
@@ -282,12 +293,20 @@ class ParserMakefile(ParserBase):
                         self.log(logging.ERROR,
                         "misses \"re\" rule in \".PHONY\" target", line = i)
 
+    def check_wildcards(self):
+        i = 0
+        for line in self.content_lines:
+            i += 1
+            if line.startswith('#') or line == '\n':
+                continue
+            if '*' in line:
+                self.log(logging.ERROR,
+                    "contains usage of a forbidden $(wildcard (*)).", line = i)
+            elif '$(wildcard' in line:
+                self.log(logging.ERROR,
+                    "contains usage of a forbidden $(wildcard) function.", line = i)
+
     def post_process(self):
-        # check if author is the same as in other container files (mainly author)
-        # if different = not ok ? Maybe project with muti-authors ?\
-        # check that updated at is after created at
-        # save author into container for futher checks
-        # -- TODO --
         if self.found_author != self.found_created_at['user']:
             self.log(logging.WARNING,
                 "has a different author({0}) than creator({1}). Suspicious !".format(
@@ -318,7 +337,8 @@ class ParserMakefile(ParserBase):
     rules = { 'header'   : check_header,
               'base_rules': check_base_rules,
               'use_flags': check_use_of_Wflags,
-              'phony_rule': check_rule_dotPHONY
+              'phony_rule': check_rule_dotPHONY,
+              'wildcards': check_wildcards
             }
 
 

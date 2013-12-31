@@ -10,6 +10,8 @@ class ParserBase(object):
 
     accepted_filenames = [ None ]
 
+    accepted_extensions = [ None ]
+
     rules = { }
 
     @classmethod
@@ -35,6 +37,17 @@ class ParserBase(object):
     def _test_filename(klass, filename):
         for accepted_filename in klass.accepted_filenames:
             if (filename == accepted_filename):
+                return True
+        return False
+
+    @classmethod
+    def accepted_fileextensions(klass):
+        return klass.accepted_extensions
+
+    @classmethod
+    def _test_fileextension(klass, fileextension):
+        for accepted_fileextension in klass.accepted_extensions:
+            if (fileextension == accepted_fileextension):
                 return True
         return False
 

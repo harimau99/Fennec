@@ -12,6 +12,8 @@ class ParserAuthor(ParserBase):
 
     accepted_filenames = [ 'auteur' ]
 
+    accepted_extensions = [ None ]
+
     @classmethod
     def accepted(klass, filedata):
         return (klass._test_filename(filedata.file_name))

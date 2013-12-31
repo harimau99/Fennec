@@ -1,3 +1,12 @@
+"""
+Context processor
+
+This is the main brain of Fennec.
+
+TODO:
+  - LOAD files and sort them: author > Makefiles > Headers > C source
+"""
+
 import os
 import copy
 import logging
@@ -115,11 +124,14 @@ class Context(object):
     def order_by_priority(self):
         # Order nodes by priority: Author files first, then Makefiles,
         # then headers and then C files
+        # -- TODO --
         pass
 
     def audit(self):
         self.order_by_priority()
+        print self.parsers
         for node, parsers in self.tests.iteritems():
+            print node, node.file_name, node.extension, node.file_type, parsers
             for parser in parsers:
                 pars = parser(self.container, self.settings, node)
                 pars.audit()

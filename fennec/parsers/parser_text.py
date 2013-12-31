@@ -12,6 +12,8 @@ class ParserText(ParserBase):
 
     accepted_filenames = [ None ]
 
+    accepted_extensions = [ '.txt' ]
+
     rules = { }
 
     @classmethod
