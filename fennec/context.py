@@ -63,6 +63,7 @@ class Context(object):
     def load_path(self, path):
         if (os.path.isdir(path)):
             for dirpath, dnames, fnames in os.walk(path):
+                dnames[:] = [d for d in dnames if not d == '.git']
                 for f in fnames:
                     if f == '.DS_Store':
                         self.flags['has_DS_Store'] = True
@@ -94,7 +95,7 @@ class Context(object):
             'env_user_group': self.user_group,
             'env_user_email': self.user_mail,
             'author': None,
-            'makefile': None,
+            'makefile': list(),
             'header': None,
             'source': None
         }
