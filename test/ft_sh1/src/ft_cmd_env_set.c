@@ -6,7 +6,7 @@
 /*   By: ksever <ksever@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2013/12/27 16:13:37 by ksever            #+#    #+#             */
-/*   Updated: 2013/12/28 01:40:42 by ksever           ###   ########.fr       */
+/*   Updated: 2014/01/02 02:09:25 by ksever           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include "libft.h"
 #include "ft_shell.h"
 
-int		ft_cmd_env_set(char *key, char *value)
+int		ft_cmd_env_set(char *key, char * value, int test, t_lst *data, char ot)
 {
 	int			iddata;
 

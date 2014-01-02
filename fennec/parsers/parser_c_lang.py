@@ -1,5 +1,5 @@
 """
-C language parser (headers and source)
+C language parser (headers AND source)
 
 TODO:
   - To add
@@ -28,29 +28,155 @@ class ParserCLang(ParserBase):
 
     def __init__(self, context, settings, node):
         super(ParserCLang, self).__init__(context, settings, node)
+        self.filename = None
+        self.found_author = None
+        self.found_created_at = { 'user': None, 'time': None }
+        self.found_updated_at = { 'user': None, 'time': None }
 
     def check_header(self):
-        pass
+        # check line by line for recipies
+        i = 0
+        lines_checked = 0
+        for line in self.content_lines:
+            i += 1
+            if i == 1 or i == 11:
+                regexp = re.compile("^/\* \*{74} \*/\n$")
+                if regexp.search(line) == None:
+                    self.log(logging.ERROR,
+                        "doesn't have a properly formatted header", line= i)
+                else:
+                    lines_checked += 1
+            if i == 2 or i == 10:
+                regexp = re.compile("^/\* {76}\*/\n$")
+                if regexp.search(line) == None:
+                    self.log(logging.ERROR,
+                        "doesn't have a properly formatted header", line= i)
+                else:
+                    lines_checked += 1
+            if i == 3:
+                regexp = re.compile("^/\* {56}:::      ::::::::   \*/\n$")
+                if regexp.search(line) == None:
+                    self.log(logging.ERROR,
+                        "doesn't have a properly formatted header", line= i)
+                else:
+                    lines_checked += 1
+            if i == 4:
+                regexp = re.compile("^/\* {3}(.{50}) :\+: {6}:\+: {4}:\+: {3}\*/\n$")
+                if regexp.search(line) == None:
+                    self.log(logging.ERROR,
+                        "doesn't have a properly formatted header", line= i)
+                else:
+                    self.filename = regexp.findall(line)[0]
+                    self.filename = self.filename.strip()
+                    lines_checked += 1
+            if i == 5:
+                regexp = re.compile("^/\* {52}\+:\+ \+:\+ {9}\+:\+     \*/\n$")
+                if regexp.search(line) == None:
+                    self.log(logging.ERROR,
+                        "doesn't have a properly formatted header", line= i)
+                else:
+                    lines_checked += 1
+            if i == 6:
+                regexp = re.compile("^/\* {3}By: ([a-z-]{3,8}) <([a-z-]{3,8})@student\.42\.fr> {10,20}\+#\+  \+:\+ {7}\+#\+ {8}\*/\n$")
+                author_test = regexp.findall(line)
+                if not author_test:
+                    self.log(logging.ERROR,
+                        "doesn't have a properly formatted author header", line= i)
+                else:
+                    xlogin1, xlogin2 = author_test[0]
+                    if xlogin1 != xlogin2:
+                        self.log(logging.ERROR,
+                            "the login and email aren't the same", line= i)
+                    else:
+                        self.found_author = xlogin1
+                        lines_checked += 1
+            if i == 7:
+                regexp = re.compile("^/\* {48}\+#\+#\+#\+#\+#\+   \+#\+ {11}\*/\n$")
+                if regexp.search(line) == None:
+                    self.log(logging.ERROR,
+                        "doesn't have a properly formatted header", line= i)
+                else:
+                    lines_checked += 1
+            if i == 8:
+                regexp = re.compile("^/\* {3}Created: (\d{4}/\d{2}/\d{2} \d{2}:\d{2}:\d{2}) by ([a-z-]{3,8}) {10,15}#\+# {4}#\+# {13}\*/\n$")
+                creator_test = regexp.findall(line)
+                if not creator_test:
+                    self.log(logging.ERROR,
+                        "doesn't have a properly formatted created at header", line= i)
+                else:
+                    time_creation, xlogin = creator_test[0]
+                    self.found_created_at['time'] = time_creation
+                    self.found_created_at['user'] = xlogin
+                    lines_checked += 1
+            if i == 9:
+                regexp = re.compile("^/\* {3}Updated: (\d{4}/\d{2}/\d{2} \d{2}:\d{2}:\d{2}) by ([a-z-]{3,8}) {9,14}###   ########\.fr {7}\*/\n$")
+                updator_test = regexp.findall(line)
+                if not updator_test:
+                    self.log(logging.ERROR,
+                        "doesn't have a properly formatted created at header", line= i)
+                else:
+                    time_creation, xlogin = updator_test[0]
+                    self.found_updated_at['time'] = time_creation
+                    self.found_updated_at['user'] = xlogin
+                    lines_checked += 1
+            if i > 12:
+                break
+        if lines_checked != 11:
+            self.log(logging.ERROR, "doesn't have a properly formatted header")
 
     def check_preprocessor_indentation(self):
         pass
 
     def check_commas(self):
-        pass
+        i = 0
+        for line in self.content_lines:
+            i += 1
+            regexp = re.compile("^.*(,[^ |\n]).*$")
+            if regexp.search(line) != None:
+                self.log(logging.ERROR,
+                    "has a missing space after comma.", line= i)
+
+    def check_semi_columns(self):
+        i = 0
+        for line in self.content_lines:
+            i += 1
+            regexp = re.compile("^.*(;[^ |\n]).*$")
+            if regexp.search(line) != None:
+                self.log(logging.ERROR,
+                    "has a missing space after semi column.", line= i)
 
     def check_c_comments(self):
         pass
 
     def check_cpp_comments(self):
-        pass
+        i = 0
+        for line in self.content_lines:
+            i += 1
+            regexp = re.compile("^.*(//).*$")
+            if regexp.search(line) != None:
+                self.log(logging.ERROR,
+                    "has a C++ comment (//).", line= i)
 
     def check_function_prototypes(self):
+        # check that function_name contains type and * next to name
+        # check that function_args contains max 4 vars
+        # check that function_type is new function (after: { ) or prototype(after: ;)
         pass
 
     def check_capital_letters(self):
         pass
 
     def check_bracket_matching(self):
+        curly_braces_open = self.content_full.count('{')
+        curly_braces_close = self.content_full.count('}')
+        if curly_braces_open != curly_braces_close:
+            self.log(logging.ERROR, "has a missing curly brace { or }.")
+        parenthesis_open = self.content_full.count('(')
+        parenthesis_close = self.content_full.count(')')
+        if parenthesis_open != parenthesis_close:
+            self.log(logging.ERROR, "has a missing parenthesis ( or ).")
+
+    def check_curly_braces_alone_on_line(self):
         pass
 
     def check_multi_includes(self):
@@ -68,11 +194,13 @@ class ParserCLang(ParserBase):
                 'header'   : check_header,
                 'preprocessor_indentation': check_preprocessor_indentation,
                 'commas': check_commas,
+                'semi_columns': check_semi_columns,
                 'comments': check_c_comments,
                 'cpp_comments': check_cpp_comments,
                 'function prototypes': check_function_prototypes,
                 'capital_letters': check_capital_letters,
                 'bracket_matching': check_bracket_matching,
+                'curly_braces_alone_on_line': check_curly_braces_alone_on_line,
                 'multi_includes': check_multi_includes,
                 'sys_includes': check_system_includes
             }

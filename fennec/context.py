@@ -129,9 +129,7 @@ class Context(object):
 
     def audit(self):
         self.order_by_priority()
-        print self.parsers
         for node, parsers in self.tests.iteritems():
-            print node, node.file_name, node.extension, node.file_type, parsers
             for parser in parsers:
                 pars = parser(self.container, self.settings, node)
                 pars.audit()
