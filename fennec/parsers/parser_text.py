@@ -25,7 +25,6 @@ class ParserText(ParserBase):
                 return True
         except OSError as e:
             self.logger.critical("Execution of 'file' failed: " + e)
-        print filedata.path
         return False
 
     def __init__(self, context, settings, node):
