@@ -1,6 +1,7 @@
 
 import logging
 import re
+import subprocess
 from parser_base import ParserBase
 
 class ParserText(ParserBase):
@@ -18,7 +19,14 @@ class ParserText(ParserBase):
 
     @classmethod
     def accepted(klass, filedata):
-        return True
+        try:
+            stdout = subprocess.check_output(["file", filedata.path])
+            if 'ASCII' in stdout:
+                return True
+        except OSError as e:
+            self.logger.critical("Execution of 'file' failed: " + e)
+        print filedata.path
+        return False
 
     def __init__(self, context, settings, node):
         super(ParserText, self).__init__(context, settings, node)

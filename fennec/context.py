@@ -78,14 +78,17 @@ class Context(object):
                         self.flags['has_DS_Store'] = True
                     elif f.startswith('.'):
                         self.flags['has_hidden_files'] = True
-                    elif f.endswith('.o'):
-                        continue
-                    elif f.endswith('.a'):
-                        continue
-                    else:
+                    elif not self._is_ignored(f):
                         self.load_file(os.path.join(dirpath, f))
         else:
-            self.load_file(path)
+            if not self._is_ignored(path):
+                self.load_file(path)
+
+    def _is_ignored(self, filename):
+        for ignored_ext in self.settings.get('ignored_ext'):
+            if filename.endswith(ignored_ext):
+                return True
+        return False
 
     def load_file(self, file_path):
         try:

@@ -15,3 +15,5 @@ BR_PARSERS = [
 ]
 
 BR_READ_ENV = True # If set to False, the info will be inferred from the files
+
+BR_IGNORED_EXT = [ '.DS_Store', '.o', '.a', '.zip', '.pdf', '.git']

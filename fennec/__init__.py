@@ -1,4 +1,4 @@
-VERSION = "0.0.3"
+VERSION = "0.0.4"
 
 __author__ = "Klemen Sever <ksever@student.42.fr>"
 __copyright__ = "Copyright 2013, Klemen Sever"
@@ -75,8 +75,10 @@ class Fennec(object):
         traces_path = os.path.join(self.settings.get('root_path'), "trace", "*")
         to_remove = glob.glob(log_path)
         for node in to_remove:
-           os.remove(node)
+            if node.endswith('.log'):
+                os.remove(node)
         to_remove = glob.glob(traces_path)
         for node in to_remove:
-           os.remove(node)
+            if node.endswith('.log'):
+                os.remove(node)
         self.logger.get_logger().info("Finished cleaning.")
