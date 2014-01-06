@@ -30,13 +30,43 @@ class ParserCSource(ParserBase):
         super(ParserCSource, self).__init__(context, settings, node)
 
     def check_forbidden_keywords(self):
-        pass
+        i = 0
+        lines_checked = 0
+        for line in self.content_lines:
+            i += 1
+            if i < 11:
+                continue
+            # Be careful, if the line contains ONE double-quote or and /* => the whole line is skipped
+            regexp = re.compile("^[^\"|/*]*[ |\t]+(case|do|for|goto|switch)[ |\t|:|\(|{|\n]+.*$")
+            result = regexp.findall(line)
+            if result:
+                self.log(logging.ERROR, "has a forbidden keyword.", line = i)
+
 
     def check_spaces_around_operators(self):
+        # i = 0
+        # lines_checked = 0
+        # for line in self.content_lines:
+        #     i += 1
+        #     if i < 11:
+        #         continue
+        #     regexp = re.compile("[^ |\t|+]\+[^ |\n|+|=]")
+        #     result = regexp.findall(line)
+        #     if result:
+        #         self.log(logging.ERROR, "has no spaces around + operator.", line = i)
         pass
 
     def check_spaces_after_keywords(self):
-        pass
+        i = 0
+        lines_checked = 0
+        for line in self.content_lines:
+            i += 1
+            if i < 11:
+                continue
+            regexp = re.compile("[ |\t|\(|\)|{|}](if|else|return|while)[^ |\n]")
+            result = regexp.findall(line)
+            if result:
+                self.log(logging.ERROR, "has no spaces after keyword (if, else, return, while).", line = i)
 
     def check_no_spaces_unary_operators(self):
         pass

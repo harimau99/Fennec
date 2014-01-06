@@ -78,6 +78,10 @@ class Context(object):
                         self.flags['has_DS_Store'] = True
                     elif f.startswith('.'):
                         self.flags['has_hidden_files'] = True
+                    elif f.endswith('.o'):
+                        continue
+                    elif f.endswith('.a'):
+                        continue
                     else:
                         self.load_file(os.path.join(dirpath, f))
         else:

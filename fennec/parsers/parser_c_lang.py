@@ -2,7 +2,8 @@
 C language parser (headers AND source)
 
 TODO:
-  - To add
+  - Once all comments and headers hav been checked, remove them from
+    lines and content to prevent false positives
 
 """
 import logging
@@ -142,8 +143,7 @@ class ParserCLang(ParserBase):
             i += 1
             regexp = re.compile("^.*(;[^ |\n]).*$")
             if regexp.search(line) != None:
-                self.log(logging.ERROR,
-                    "has a missing space after semi column.", line= i)
+                self.log(logging.ERROR, "has a missing space after semi column.", line= i)
 
     def check_c_comments(self):
         pass
@@ -154,13 +154,14 @@ class ParserCLang(ParserBase):
             i += 1
             regexp = re.compile("^.*(//).*$")
             if regexp.search(line) != None:
-                self.log(logging.ERROR,
-                    "has a C++ comment (//).", line= i)
+                self.log(logging.ERROR, "has a C++ comment (//).", line= i)
 
     def check_function_prototypes(self):
         # check that function_name contains type and * next to name
         # check that function_args contains max 4 vars
         # check that function_type is new function (after: { ) or prototype(after: ;)
+        #regexp = re.compile("^^([a-z_]+)([ |\t]+)(\**[a-z0-9_]+)\(([a-z_]+( \**[a-z0-9_]+))?(, ?[a-z_]+( \**[a-z0-9_]+))?(, ?[a-z_]+( \**[a-z0-9_])+)?(, ?[a-z_]+( \**[a-z0-9_])+)?\);?\n$")
+        #if regexp.findall(line) == None:
         pass
 
     def check_capital_letters(self):

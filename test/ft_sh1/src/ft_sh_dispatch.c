@@ -6,7 +6,7 @@
 /*   By: ksever <ksever@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2013/12/27 01:40:03 by ksever            #+#    #+#             */
-/*   Updated: 2013/12/29 13:02:10 by ksever           ###   ########.fr       */
+/*   Updated: 2014/01/03 14:50:47 by ksever           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ int		ft_sh_dispatch(char *cmd)
 	char	*path;
 	int		i;
 
-	if(!(cmd_split = ft_strsplit(cmd, ' ')))
+	if (!(cmd_split = ft_strsplit(cmd, ' ')))
 		return (ft_sh_error("42sh: Cannot process command."));
 	i = 0;
 	while (i < 5 && cmd_split[0] != '\0')
