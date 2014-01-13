@@ -55,7 +55,7 @@ class ParserMakefile(ParserBase):
         for line in self.content_lines:
             i += 1
             if i == 1 or i == 11:
-                regexp = re.compile("^# \*{76} #\n$")
+                regexp = re.compile("^# ?\*{76,78} ?#\n$")
                 if regexp.search(line) == None:
                     self.log(logging.ERROR,
                         "doesn't have a properly formatted header", line= i)

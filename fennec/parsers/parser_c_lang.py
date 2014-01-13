@@ -132,7 +132,7 @@ class ParserCLang(ParserBase):
         i = 0
         for line in self.content_lines:
             i += 1
-            regexp = re.compile("^.*(,[^ |\n]).*$")
+            regexp = re.compile("^.*(,[^ |\n|\\\n]).*$")
             if regexp.search(line) != None:
                 self.log(logging.ERROR,
                     "has a missing space after comma.", line= i)

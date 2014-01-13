@@ -3,6 +3,7 @@
 C syntax rules for 42 Coding School
 
 Summary:
+  - Check header data is concurrent with file data (creation timestamp etc.)
   - Lines must not exceed 80 chars.
   - Maximum 5 functions per file.
   - Header parsing ?
