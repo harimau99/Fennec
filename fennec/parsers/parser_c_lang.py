@@ -187,6 +187,9 @@ class ParserCLang(ParserBase):
     def check_system_includes(self):
         pass
 
+    def check_mixed_spaces_and_tabs(self):
+        pass
+
     def post_process(self):
         """Save data into context, perform some meta-checks"""
         pass
