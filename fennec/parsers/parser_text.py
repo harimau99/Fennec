@@ -43,8 +43,14 @@ class ParserText(ParserBase):
         i = 0
         for line in self.content_lines:
             i += 1
-            linerep = line.replace('\t', '    ')
-            if (line[81:]):
+            if '\t' in line:
+                lstline = list(line)
+                for idx, char in enumerate(lstline):
+                    if char == '\t':
+                        spaces = ' ' * (4 - ((idx + 4) % 4))
+                        lstline[idx] = spaces
+                line = ''.join(lstline)
+            if line[81:]:
                 self.log(logging.CRITICAL, "has more than"
                                             " 80 chars length.", line = i)
 
