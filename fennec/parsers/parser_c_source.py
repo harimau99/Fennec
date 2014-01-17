@@ -117,7 +117,7 @@ class ParserCSource(ParserCLang):
                     pass
                 elif subline[pos + 1] == '=':
                     pass
-                elif subline[pos - 1] == '<':
+                elif subline[pos + 1] == '<':
                     pass
                 else:
                     self.log(logging.ERROR, "has no spaces around < operator.", line = i)
@@ -127,7 +127,9 @@ class ParserCSource(ParserCLang):
                 if subline[pos - 1] in "\t " \
                 and subline[pos + 1] in " ":
                     pass
-                elif subline[pos + 1] in "=>":
+                elif subline[pos + 1] in "=":
+                    pass
+                elif subline[pos + 1] in ">":
                     pass
                 elif subline[pos - 1] == '-':
                     pass
