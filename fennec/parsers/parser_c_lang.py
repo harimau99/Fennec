@@ -147,7 +147,22 @@ class ParserCLang(ParserBase):
                 self.log(logging.ERROR, "has a missing space after semi column.", line= i)
 
     def check_c_comments(self):
-        pass
+        is_comment = False
+        for lineidx, line in enumerate(self.content_lines):
+            is_comment = False
+            if '/*' or '*/' in line:
+                lineparse = list(line)
+                for idx, char in enumerate(lineparse):
+                    if char == '/' and lineparse[idx + 1] == '*':
+                        is_comment = True
+                    elif char == '/' and lineparse[idx - 1] == '*':
+                        is_comment = False
+                    elif is_comment \
+                    and not (char == '*' and lineparse[idx - 1] == '/') \
+                    and not (char == '*' and lineparse[idx + 1] == '/'):
+                        lineparse[idx] = '_'
+                self.content_lines[lineidx] = ''.join(lineparse)
+        # now check for C comments in correct places (headers and before functions only)
 
     def check_cpp_comments(self):
         i = 0
@@ -198,21 +213,21 @@ class ParserCLang(ParserBase):
 
     def _remove_specialchars(self):
         for lineidx, line in enumerate(self.content_lines):
-            flag_string = False
+            is_string = False
             if '"' in line:
                 newline = list(line)
                 for idx, char in enumerate(line):
                     if char == '"' and newline[idx - 1] != '\\':
-                        flag_string = not flag_string
-                    if flag_string and char in ';:,:()':
+                        is_string = not is_string
+                    if is_string and char in ';:,:()':
                         newline[idx] = '_'
                 self.content_lines[lineidx] = ''.join(newline)
         newfullcontent = list(self.content_full)
-        flag_string = False
+        is_string = False
         for idx, char in enumerate(self.content_full):
             if char == '"' and newfullcontent[idx - 1] != '\\':
-                flag_string = not flag_string
-            if flag_string and char in ';:,:()':
+                is_string = not is_string
+            if is_string and char in ';:,:()':
                 newfullcontent[idx] = '_'
         self.content_full = ''.join(newfullcontent)
 
@@ -222,10 +237,10 @@ class ParserCLang(ParserBase):
 
     rules = {
                 'header'   : check_header,
+                'comments': check_c_comments, #changes comments, should be only after header check
                 'preprocessor_indentation': check_preprocessor_indentation,
                 'commas': check_commas,
                 'semi_columns': check_semi_columns,
-                'comments': check_c_comments,
                 'cpp_comments': check_cpp_comments,
                 'function prototypes': check_function_prototypes,
                 'capital_letters': check_capital_letters,

@@ -6,7 +6,7 @@
 /*   By: ksever <ksever@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2013/12/28 00:53:00 by ksever            #+#    #+#             */
-/*   Updated: 2014/01/17 18:06:37 by ksever           ###   ########.fr       */
+/*   Updated: 2014/01/17 18:26:42 by ksever           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ int			ft_cmd_cd_goto(char *path)
 	char		*new_path;
 
 	cwd = getcwd(NULL, PATH_MAX + 1);
-	new_path = ft_fs_path_join(cwd, path);
+	new_path = ft_fs_path_join(cwd, path); /*ceci est;un commentaire*/
 	if (chdir(new_path) == -1)
 	{
 		free(cwd);
