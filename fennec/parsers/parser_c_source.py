@@ -117,6 +117,8 @@ class ParserCSource(ParserCLang):
                     pass
                 elif subline[pos + 1] == '=':
                     pass
+                elif subline[pos - 1] == '<':
+                    pass
                 else:
                     self.log(logging.ERROR, "has no spaces around < operator.", line = i)
             if '>' in line and not line.startswith('#'):
@@ -125,7 +127,7 @@ class ParserCSource(ParserCLang):
                 if subline[pos - 1] in "\t " \
                 and subline[pos + 1] in " ":
                     pass
-                elif subline[pos + 1] == '=':
+                elif subline[pos + 1] in "=>":
                     pass
                 elif subline[pos - 1] == '-':
                     pass
@@ -148,22 +150,22 @@ class ParserCSource(ParserCLang):
             if '++' in line:
                 pos = line.find('++')
                 subline = list(line)
-                if subline[pos - 1] in "abcdefghijklmnopqrstuvwxyz0123456789_]" \
+                if subline[pos - 1] in "abcdefghijklmnopqrstuvwxyz0123456789_[]()" \
                 and subline[pos + 2] in " \t\n;,[]()":
                     pass
                 elif subline[pos - 1] in " \t\n;,[]()" \
-                and subline[pos + 2] in "abcdefghijklmnopqrstuvwxyz0123456789_]":
+                and subline[pos + 2] in "abcdefghijklmnopqrstuvwxyz0123456789_[]()*":
                     pass
                 else:
                     self.log(logging.ERROR, "has invalid format for ++ operator (no spaces, ...).", line = i)
             if '--' in line:
                 pos = line.find('--')
                 subline = list(line)
-                if subline[pos - 1] in "abcdefghijklmnopqrstuvwxyz0123456789_]" \
+                if subline[pos - 1] in "abcdefghijklmnopqrstuvwxyz0123456789_[]()" \
                 and subline[pos + 2] in " \t\n;,[]()":
                     pass
                 elif subline[pos - 1] in " \t\n;,[]()" \
-                and subline[pos + 2] in "abcdefghijklmnopqrstuvwxyz0123456789_]":
+                and subline[pos + 2] in "abcdefghijklmnopqrstuvwxyz0123456789_[]()*":
                     pass
                 else:
                     self.log(logging.ERROR, "has invalid format for -- operator (no spaces, ...).", line = i)
