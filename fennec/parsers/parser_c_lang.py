@@ -33,6 +33,7 @@ class ParserCLang(ParserBase):
         self.found_author = None
         self.found_created_at = { 'user': None, 'time': None }
         self.found_updated_at = { 'user': None, 'time': None }
+        self._remove_specialchars()
 
     def check_header(self):
         # check line by line for recipies
@@ -189,6 +190,19 @@ class ParserCLang(ParserBase):
 
     def check_mixed_spaces_and_tabs(self):
         pass
+
+    def _remove_specialchars(self):
+        for lineidx, line in enumerate(self.content_lines):
+            flag_string = False
+            if '"' in line:
+                newline = list(line)
+                for idx, char in enumerate(line):
+                    if char == '"' and newline[idx - 1] != '\\':
+                        flag_string = not flag_string
+                    if flag_string and char in ';:,:()':
+                        newline[idx] = '_'
+                self.content_lines[lineidx] = ''.join(newline)
+        print self.content_lines
 
     def post_process(self):
         """Save data into context, perform some meta-checks"""
