@@ -202,7 +202,6 @@ class ParserCLang(ParserBase):
                     if flag_string and char in ';:,:()':
                         newline[idx] = '_'
                 self.content_lines[lineidx] = ''.join(newline)
-        print self.content_lines
 
     def post_process(self):
         """Save data into context, perform some meta-checks"""
