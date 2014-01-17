@@ -7,9 +7,9 @@ TODO:
 """
 import logging
 import re
-from parser_base import ParserBase
+from parser_c_lang import ParserCLang
 
-class ParserCHeaders(ParserBase):
+class ParserCHeaders(ParserCLang):
     """
     Parser used to check C header files
     """

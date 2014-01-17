@@ -7,9 +7,9 @@ TODO:
 """
 import logging
 import re
-from parser_base import ParserBase
+from parser_c_lang import ParserCLang
 
-class ParserCSource(ParserBase):
+class ParserCSource(ParserCLang):
     """
     Parser used to check C source files
     """
@@ -28,6 +28,7 @@ class ParserCSource(ParserBase):
 
     def __init__(self, context, settings, node):
         super(ParserCSource, self).__init__(context, settings, node)
+        super(ParserCSource, self).check_c_comments()
 
     def check_forbidden_keywords(self):
         i = 0
@@ -40,17 +41,80 @@ class ParserCSource(ParserBase):
 
 
     def check_spaces_around_operators(self):
-        # i = 0
-        # lines_checked = 0
-        # for line in self.content_lines:
-        #     i += 1
-        #     if i < 11:
-        #         continue
-        #     regexp = re.compile("[^ |\t|+]\+[^ |\n|+|=]")
-        #     result = regexp.findall(line)
-        #     if result:
-        #         self.log(logging.ERROR, "has no spaces around + operator.", line = i)
-        pass
+        i = 0
+        lines_checked = 0
+        for line in self.content_lines:
+            i += 1
+            if '&&' in line:
+                pos = line.find('&&')
+                subline = list(line)
+                if subline[pos - 1] in "\t " \
+                and subline[pos + 2] in " ":
+                    pass
+                else:
+                    self.log(logging.ERROR, "has no spaces around && operator.", line = i)
+            if '||' in line:
+                pos = line.find('||')
+                subline = list(line)
+                if subline[pos - 1] in "\t " \
+                and subline[pos + 2] in " ":
+                    pass
+                else:
+                    self.log(logging.ERROR, "has no spaces around || operator.", line = i)
+            if '==' in line:
+                pos = line.find('==')
+                subline = list(line)
+                if subline[pos - 1] in "\t " \
+                and subline[pos + 2] in " ":
+                    pass
+                else:
+                    self.log(logging.ERROR, "has no spaces around == operator.", line = i)
+            if '!=' in line:
+                pos = line.find('!=')
+                subline = list(line)
+                if subline[pos - 1] in "\t " \
+                and subline[pos + 2] in " ":
+                    pass
+                else:
+                    self.log(logging.ERROR, "has no spaces around != operator.", line = i)
+            if '>=' in line:
+                pos = line.find('>=')
+                subline = list(line)
+                if subline[pos - 1] in "\t " \
+                and subline[pos + 2] in " ":
+                    pass
+                else:
+                    self.log(logging.ERROR, "has no spaces around >= operator.", line = i)
+            if '<=' in line:
+                pos = line.find('<=')
+                subline = list(line)
+                if subline[pos - 1] in "\t " \
+                and subline[pos + 2] in " ":
+                    pass
+                else:
+                    self.log(logging.ERROR, "has no spaces around <= operator.", line = i)
+            if '<' in line and not line.startswith('#'):
+                pos = line.find('<')
+                subline = list(line)
+                if subline[pos - 1] in "\t " \
+                and subline[pos + 1] in " ":
+                    pass
+                elif subline[pos + 1] == '=':
+                    pass
+                else:
+                    self.log(logging.ERROR, "has no spaces around < operator.", line = i)
+            if '>' in line and not line.startswith('#'):
+                pos = line.find('>')
+                subline = list(line)
+                if subline[pos - 1] in "\t " \
+                and subline[pos + 1] in " ":
+                    pass
+                elif subline[pos + 1] == '=':
+                    pass
+                elif subline[pos - 1] == '-':
+                    pass
+                else:
+                    self.log(logging.ERROR, "has no spaces around > operator.", line = i)
 
     def check_spaces_after_keywords(self):
         i = 0
@@ -68,16 +132,25 @@ class ParserCSource(ParserBase):
             if '++' in line:
                 pos = line.find('++')
                 subline = list(line)
-                for idx, char in enumerate(line):
-                    if subline[pos - 1] in "abcdefghijklmnopqrstuvwxyz0123456789_" \
-                    and subline[pos + 2] in " \n;,[]()":
-                            break
-                    elif subline[pos - 1] in " \n;,[]()" \
-                    and subline[pos + 2] in "abcdefghijklmnopqrstuvwxyz0123456789_":
-                            break
-                    else:
-                        self.log(logging.ERROR, "has invalid format for ++ operator (no spaces, ...).", line = i)
-                        break
+                if subline[pos - 1] in "abcdefghijklmnopqrstuvwxyz0123456789_" \
+                and subline[pos + 2] in " \t\n;,[]()":
+                    pass
+                elif subline[pos - 1] in " \t\n;,[]()" \
+                and subline[pos + 2] in "abcdefghijklmnopqrstuvwxyz0123456789_":
+                    pass
+                else:
+                    self.log(logging.ERROR, "has invalid format for ++ operator (no spaces, ...).", line = i)
+            if '--' in line:
+                pos = line.find('--')
+                subline = list(line)
+                if subline[pos - 1] in "abcdefghijklmnopqrstuvwxyz0123456789_" \
+                and subline[pos + 2] in " \t\n;,[]()":
+                    pass
+                elif subline[pos - 1] in " \t\n;,[]()" \
+                and subline[pos + 2] in "abcdefghijklmnopqrstuvwxyz0123456789_":
+                    pass
+                else:
+                    self.log(logging.ERROR, "has invalid format for -- operator (no spaces, ...).", line = i)
 
     def check_max_function_length(self):
         pass

@@ -219,7 +219,7 @@ class ParserCLang(ParserBase):
                 for idx, char in enumerate(line):
                     if char == '"' and newline[idx - 1] != '\\':
                         is_string = not is_string
-                    if is_string and char in ';:,:()':
+                    if is_string and char in ';:,:()&|><[]{}%#!*-_=+':
                         newline[idx] = '_'
                 self.content_lines[lineidx] = ''.join(newline)
         newfullcontent = list(self.content_full)
@@ -227,7 +227,7 @@ class ParserCLang(ParserBase):
         for idx, char in enumerate(self.content_full):
             if char == '"' and newfullcontent[idx - 1] != '\\':
                 is_string = not is_string
-            if is_string and char in ';:,:()':
+            if is_string and char in ';:,:()&|><[]{}%#!*-_=+':
                 newfullcontent[idx] = '_'
         self.content_full = ''.join(newfullcontent)
 

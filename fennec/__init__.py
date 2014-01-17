@@ -1,4 +1,4 @@
-VERSION = "0.0.4"
+VERSION = "0.0.5"
 
 __author__ = "Klemen Sever <ksever@student.42.fr>"
 __copyright__ = "Copyright 2013, Klemen Sever"
