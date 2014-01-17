@@ -31,12 +31,8 @@ class ParserCSource(ParserBase):
 
     def check_forbidden_keywords(self):
         i = 0
-        lines_checked = 0
         for line in self.content_lines:
             i += 1
-            if i < 11:
-                continue
-            # Be careful, if the line contains ONE double-quote or and /* => the whole line is skipped
             regexp = re.compile("^[^\"|/*]*[ |\t]+(case|do|for|goto|switch)[ |\t|:|\(|{|\n]+.*$")
             result = regexp.findall(line)
             if result:
@@ -58,18 +54,30 @@ class ParserCSource(ParserBase):
 
     def check_spaces_after_keywords(self):
         i = 0
-        lines_checked = 0
         for line in self.content_lines:
             i += 1
-            if i < 11:
-                continue
             regexp = re.compile("[ |\t|\(|\)|{|}](if|else|return|while)[^ |\n]")
             result = regexp.findall(line)
             if result:
                 self.log(logging.ERROR, "has no spaces after keyword (if, else, return, while).", line = i)
 
     def check_no_spaces_unary_operators(self):
-        pass
+        i = 0
+        for line in self.content_lines:
+            i += 1
+            if '++' in line:
+                pos = line.find('++')
+                subline = list(line)
+                for idx, char in enumerate(line):
+                    if subline[pos - 1] in "abcdefghijklmnopqrstuvwxyz0123456789_" \
+                    and subline[pos + 2] in " \n;,[]()":
+                            break
+                    elif subline[pos - 1] in " \n;,[]()" \
+                    and subline[pos + 2] in "abcdefghijklmnopqrstuvwxyz0123456789_":
+                            break
+                    else:
+                        self.log(logging.ERROR, "has invalid format for ++ operator (no spaces, ...).", line = i)
+                        break
 
     def check_max_function_length(self):
         pass

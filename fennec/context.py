@@ -38,6 +38,7 @@ class Context(object):
             self.read_env()
         self.load_parsers()
         self.create_container()
+        self.hiddenfiles = list()
 
     def read_env(self):
         if (os.environ.get('USER') != None):
@@ -78,6 +79,7 @@ class Context(object):
                         self.flags['has_DS_Store'] = True
                     elif f.startswith('.'):
                         self.flags['has_hidden_files'] = True
+                        self.hiddenfiles.append(f)
                     elif not self._is_ignored(f):
                         self.load_file(os.path.join(dirpath, f))
         else:
@@ -126,7 +128,11 @@ class Context(object):
             self.logger.info("Your path(s) contains .DS_Store file(s).")
         if self.flags['has_hidden_files'] == True:
             self.logger.warning("Your path(s) contains one or more "
-                                "hidden files. Be careful.")
+                                "hidden files (be careful):")
+            self.logger.warning("=== Start hidden files list ===")
+            for elem in self.hiddenfiles:
+                self.logger.warning(" --> " + elem)
+            self.logger.warning("=== End hidden files list ===")
 
     def order_by_priority(self):
         # Order nodes by priority: Author files first, then Makefiles,

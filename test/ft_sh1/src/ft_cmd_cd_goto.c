@@ -6,7 +6,7 @@
 /*   By: ksever <ksever@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2013/12/28 00:53:00 by ksever            #+#    #+#             */
-/*   Updated: 2014/01/17 18:26:42 by ksever           ###   ########.fr       */
+/*   Updated: 2014/01/17 21:11:18 by ksever           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ int			ft_cmd_cd_goto(char *path)
 		free(cwd);
 		free(new_path);
 		return (ft_sh_perror("42sh: \":,;);cd"));
+		cmd++;
 	}
 	ft_cmd_env_set("OLDPWD", cwd);
 	ft_cmd_env_set("PWD", getcwd(NULL, PATH_MAX + 1));
