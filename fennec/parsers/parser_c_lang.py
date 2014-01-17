@@ -189,7 +189,12 @@ class ParserCLang(ParserBase):
         pass
 
     def check_mixed_spaces_and_tabs(self):
-        pass
+        i = 0
+        for line in self.content_lines:
+            i += 1
+            regexp = re.compile("^.*(\t | \t).*$")
+            if regexp.search(line) != None:
+                self.log(logging.ERROR, "has mixed spaces and tabs.", line= i)
 
     def _remove_specialchars(self):
         for lineidx, line in enumerate(self.content_lines):
@@ -227,7 +232,8 @@ class ParserCLang(ParserBase):
                 'bracket_matching': check_bracket_matching,
                 'curly_braces_alone_on_line': check_curly_braces_alone_on_line,
                 'multi_includes': check_multi_includes,
-                'sys_includes': check_system_includes
+                'sys_includes': check_system_includes,
+                'mixed_space_tabs': check_mixed_spaces_and_tabs
             }
 
 name = 'parser_c_lang'
