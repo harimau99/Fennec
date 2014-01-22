@@ -4,12 +4,12 @@ C syntax rules for 42 Coding School
 
 Summary:
   - Check header data is concurrent with file data (creation timestamp etc.)
-  - Lines must not exceed 80 chars.
+  + Lines must not exceed 80 chars.
   - Maximum 5 functions per file.
-  - Header parsing ?
-  - Forbidden keywords
+  + Header parsing ?
+  + Forbidden keywords
   - Forbidden / Allowed functions
-  - Pair number of {, ( and [
+  + Pair number of {, ( and [
   - Keyword formatting:
     - return (*)
     - while (*)(check for ; <= are you sure ?)
@@ -21,14 +21,14 @@ Summary:
   - Maximum 25 lines per function
   - Maximum 4 params in function prototype and/or function declaration
   - Logic between function type and usage ? (complex)
-  - Space after ,
-  - ; at eol
+  + Space after ,
+  + ; at eol
   - empty line after each block
   - delaration and initialisation on the same line
   - * next to var name and not var type
   - empty line after var declaration and only empty line in function
-  - no trailing whitespaces / tabs
-  - no space after keyword
+  + no trailing whitespaces / tabs
+  + no space after keyword
   - ternaires imbriqués
   - ternaires hors assignation
   - no french words/only english for vars
@@ -70,11 +70,11 @@ Summary:
   - only names in CAPS are for macros
   - indentation of preprocessor instructions between # and command
   - no #if, #ifndef or #ifdef after the first function definition in a .c
-  - forbidden functions: for, do/while, switch, goto, case
-  - no C+= comments (//)
+  + forbidden functions: for, do/while, switch, goto, case
+  + no C+= comments (//)
   - Alignment of C comments with **
   - no includes of .c
-  - Makefile must have $(NAME), all, clean, fclean and re rules
+  + Makefile must have $(NAME), all, clean, fclean and re rules
   - the Makefile must not relink after second time of make
   - no wildcard usage (*.c)
   - no line above standard header

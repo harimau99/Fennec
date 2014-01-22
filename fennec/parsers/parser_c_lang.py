@@ -149,7 +149,6 @@ class ParserCLang(ParserBase):
     def check_c_comments(self):
         is_comment = False
         for lineidx, line in enumerate(self.content_lines):
-            is_comment = False
             if '/*' or '*/' in line:
                 lineparse = list(line)
                 for idx, char in enumerate(lineparse):
@@ -162,6 +161,16 @@ class ParserCLang(ParserBase):
                     and not (char == '*' and lineparse[idx + 1] == '/'):
                         lineparse[idx] = '_'
                 self.content_lines[lineidx] = ''.join(lineparse)
+        newfullcontent = list(self.content_full)
+        is_comment = False
+        for idx, char in enumerate(self.content_full):
+            if char == '/' and newfullcontent[idx + 1] == '*':
+                is_comment = True
+            if char == '*' and newfullcontent[idx + 1] == '/':
+                is_comment = False;
+            if is_comment:
+                newfullcontent[idx] = '_'
+        self.content_full = ''.join(newfullcontent)
         # now check for C comments in correct places (headers and before functions only)
 
     def check_cpp_comments(self):
@@ -219,7 +228,7 @@ class ParserCLang(ParserBase):
                 for idx, char in enumerate(line):
                     if char == '"' and newline[idx - 1] != '\\':
                         is_string = not is_string
-                    if is_string and char in ';:,:()&|><[]{}%#!*-_=+':
+                    if is_string and char in ';:,:()&|></[]{}%#!-_=+':
                         newline[idx] = '_'
                 self.content_lines[lineidx] = ''.join(newline)
         newfullcontent = list(self.content_full)
@@ -227,7 +236,7 @@ class ParserCLang(ParserBase):
         for idx, char in enumerate(self.content_full):
             if char == '"' and newfullcontent[idx - 1] != '\\':
                 is_string = not is_string
-            if is_string and char in ';:,:()&|><[]{}%#!*-_=+':
+            if is_string and char in ';:,:()&|><[]/{}%#!-_=+':
                 newfullcontent[idx] = '_'
         self.content_full = ''.join(newfullcontent)
 

@@ -80,7 +80,7 @@ class ParserCSource(ParserCLang):
             if '>=' in line:
                 pos = line.find('>=')
                 subline = list(line)
-                if subline[pos - 1] in "\t " \
+                if subline[pos - 1] in "\t >" \
                 and subline[pos + 2] in " ":
                     pass
                 else:
@@ -88,7 +88,7 @@ class ParserCSource(ParserCLang):
             if '<=' in line:
                 pos = line.find('<=')
                 subline = list(line)
-                if subline[pos - 1] in "\t " \
+                if subline[pos - 1] in "\t <" \
                 and subline[pos + 2] in " ":
                     pass
                 else:
@@ -96,8 +96,8 @@ class ParserCSource(ParserCLang):
             if '<<' in line:
                 pos = line.find('<<')
                 subline = list(line)
-                if subline[pos - 1] in "\t " \
-                and subline[pos + 2] in " ":
+                if subline[pos - 1] in "\t <" \
+                and subline[pos + 2] in " =":
                     pass
                 else:
                     self.log(logging.ERROR, "has no spaces around << operator.", line = i)
@@ -105,7 +105,23 @@ class ParserCSource(ParserCLang):
                 pos = line.find('>>')
                 subline = list(line)
                 if subline[pos - 1] in "\t " \
-                and subline[pos + 2] in " ":
+                and subline[pos + 2] in " =":
+                    pass
+                else:
+                    self.log(logging.ERROR, "has no spaces around >> operator.", line = i)
+            if '<<=' in line:
+                pos = line.find('<<=')
+                subline = list(line)
+                if subline[pos - 1] in "\t " \
+                and subline[pos + 3] in " ":
+                    pass
+                else:
+                    self.log(logging.ERROR, "has no spaces around <<= operator.", line = i)
+            if '>>=' in line:
+                pos = line.find('>>=')
+                subline = list(line)
+                if subline[pos - 1] in "\t " \
+                and subline[pos + 3] in " ":
                     pass
                 else:
                     self.log(logging.ERROR, "has no spaces around >> operator.", line = i)
@@ -113,11 +129,7 @@ class ParserCSource(ParserCLang):
                 pos = line.find('<')
                 subline = list(line)
                 if subline[pos - 1] in "\t " \
-                and subline[pos + 1] in " ":
-                    pass
-                elif subline[pos + 1] == '=':
-                    pass
-                elif subline[pos + 1] == '<':
+                and subline[pos + 1] in " =<":
                     pass
                 else:
                     self.log(logging.ERROR, "has no spaces around < operator.", line = i)
@@ -125,11 +137,7 @@ class ParserCSource(ParserCLang):
                 pos = line.find('>')
                 subline = list(line)
                 if subline[pos - 1] in "\t " \
-                and subline[pos + 1] in " ":
-                    pass
-                elif subline[pos + 1] in "=":
-                    pass
-                elif subline[pos + 1] in ">":
+                and subline[pos + 1] in " =>":
                     pass
                 elif subline[pos - 1] == '-':
                     pass
