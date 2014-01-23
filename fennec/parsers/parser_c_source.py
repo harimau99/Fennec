@@ -181,7 +181,19 @@ class ParserCSource(ParserCLang):
                     self.log(logging.ERROR, "has invalid format for -- operator (no spaces, ...).", line = i)
 
     def check_max_function_length(self):
-        pass
+        i = 0;
+        count_data = list()
+        for line in self.content_lines:
+            i += 1
+            regexp = re.compile("^.*{.*\n$")
+            if regexp.search(line) != None:
+                count_data.append(i)
+            regexp = re.compile("^.*}.*\n$")
+            if regexp.search(line) != None:
+                end = count_data.pop()
+                total_len = i - end
+                if total_len > 25:
+                    self.log(logging.ERROR, "has a block of more than 25 lines.", line = i)
 
     def check_function_spacing(self):
         pass
