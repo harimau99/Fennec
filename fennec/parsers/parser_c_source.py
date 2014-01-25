@@ -192,8 +192,10 @@ class ParserCSource(ParserCLang):
             if regexp.search(line) != None:
                 end = count_data.pop()
                 total_len = i - end
-                if total_len > 25:
+                if total_len > 26:
                     self.log(logging.ERROR, "has a block of more than 25 lines.", line = i)
+                elif total_len == 26:
+                    self.log(logging.INFO, "has a block of exactly 25 lines.", line = i)
 
     def check_function_spacing(self):
         pass
