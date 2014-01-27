@@ -68,7 +68,7 @@ class ParserText(ParserBase):
         i = 0
         for line in self.content_lines:
             i += 1
-            regexp = re.compile("[\v\a\b\f]+")
+            regexp = re.compile("[\v\a\b\f\r]+")
             test = regexp.search(line)
             if test:
                 self.log(logging.WARNING, "has an unusual character."
