@@ -223,6 +223,15 @@ class ParserCLang(ParserBase):
     def _remove_specialchars(self):
         for lineidx, line in enumerate(self.content_lines):
             is_string = False
+            if '\'' in line:
+                is_char = False
+                newline = list(line)
+                for idx, char in enumerate(line):
+                    if char == '\'' and newline[idx - 1] != '\\':
+                        is_char = True
+                    if is_char and char in ';:,:()"&|></[]{}%#!-_=+':
+                        newline[idx] = '_'
+                self.content_lines[lineidx] = ''.join(newline)
             if '"' in line:
                 newline = list(line)
                 for idx, char in enumerate(line):
@@ -233,10 +242,13 @@ class ParserCLang(ParserBase):
                 self.content_lines[lineidx] = ''.join(newline)
         newfullcontent = list(self.content_full)
         is_string = False
+        is_char = False
         for idx, char in enumerate(self.content_full):
-            if char == '"' and newfullcontent[idx - 1] != '\\':
+            if char == '\'' and newfullcontent[idx - 1] != '\\':
+                is_char = not is_char
+            if not is_char and char == '"' and newfullcontent[idx - 1] != '\\':
                 is_string = not is_string
-            if is_string and char in ';:,:()&|><[]/{}%#!-_=+':
+            if not is_char and is_string and char in ';:,:()&|><[]/{}%#!-_=+':
                 newfullcontent[idx] = '_'
         self.content_full = ''.join(newfullcontent)
 

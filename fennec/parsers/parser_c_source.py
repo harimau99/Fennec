@@ -185,13 +185,15 @@ class ParserCSource(ParserCLang):
         count_data = list()
         for line in self.content_lines:
             i += 1
-            regexp = re.compile("^.*{.*\n$")
-            if regexp.search(line) != None:
-                count_data.append(i)
-            regexp = re.compile("^.*}.*\n$")
-            if regexp.search(line) != None:
-                end = count_data.pop()
-                total_len = i - end
+            res = line.count('{')
+            if res > 0:
+                for x in range(res):
+                    count_data.append(i)
+            res = line.count('}')
+            if res > 0:
+                for y in range(res):
+                    last = count_data.pop()
+                total_len = i - last
                 if total_len > 26:
                     self.log(logging.ERROR, "has a block of more than 25 lines.", line = i)
                 elif total_len == 26:

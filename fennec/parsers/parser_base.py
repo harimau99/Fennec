@@ -56,9 +56,9 @@ class ParserBase(object):
         self.context = context_container
         self.settings = settings
         self.node = node
-        with open(self.node.path) as f:
+        with open(self.node.path, 'U') as f:
             self.content_lines = f.readlines()
-        with open(self.node.path) as f:
+        with open(self.node.path, 'U') as f:
             self.content_full = f.read()
 
     def log(self, level, message, filename = None, line = None):

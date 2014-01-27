@@ -68,11 +68,15 @@ class ParserText(ParserBase):
         i = 0
         for line in self.content_lines:
             i += 1
-            regexp = re.compile("[\v\a\b\f\r]+")
+            regexp = re.compile("[\v\a\b\f]+")
             test = regexp.search(line)
-            if test != None:
+            if test:
                 self.log(logging.WARNING, "has an unusual character."
                                     " Is it intentional ?", line = i)
+            regexp = re.compile("[\r]+")
+            test = regexp.search(line)
+            if test:
+                self.log(logging.INFO, "has Window newlines (\r\n).", line = i)
 
     def check_multi_newline(self):
         i = 0

@@ -140,15 +140,16 @@ class ParserMakefile(ParserBase):
 
     def check_base_rules(self):
         # check if the file has any recipies
-        regexp = re.compile("^.*\n([\$\(\)a-zA-Z0-9/\.%]*):.*$", re.MULTILINE)
+        regexp = re.compile("^.*\n([\$\(\)a-zA-Z0-9/\.%]*)[ \t]*:.*$", re.MULTILINE)
         result = regexp.findall(self.content_full)
-        if result == None:
+        if not result:
             self.log(logging.ERROR, "doesn't have ANY target.")
             return
-        # check if the "all" target is the first
-        if result[0] != 'all' and result[0] != '.PHONY':
-            self.log(logging.ERROR,
-            "has \"{0}\" as the default target instead of \"all\".".format(result[0]))
+        else:
+            # check if the "all" target is the first
+            if result[0] != 'all' and result[0] != '.PHONY':
+                self.log(logging.ERROR,
+                "has \"{0}\" as the default target instead of \"all\".".format(result[0]))
         # check line by line (to show line) for targets
         i = 0
         for line in self.content_lines:
@@ -159,35 +160,35 @@ class ParserMakefile(ParserBase):
             if regexp.search(line) != None:
                 self.has['NAME_decl'] = True
             # Check targets
-            regexp = re.compile("^all:.*$")
+            regexp = re.compile("^all[ \t]*:.*$")
             if regexp.search(line) != None:
                 if self.has['all_target'] == False:
                     self.has['all_target'] = True
                 else:
                     self.log(logging.ERROR,
                              "has more than one \"all\" target.", line = i)
-            regexp = re.compile("^\$\(NAME\):.*$")
+            regexp = re.compile("^\$\(NAME\)[ \t]*:.*$")
             if regexp.search(line) != None:
                 if self.has['NAME_target'] == False:
                     self.has['NAME_target'] = True
                 else:
                     self.log(logging.ERROR,
                              "has more than one \"NAME\" target.", line = i)
-            regexp = re.compile("^clean:.*$")
+            regexp = re.compile("^clean[ \t]*:.*$")
             if regexp.search(line) != None:
                 if self.has['clean_target'] == False:
                     self.has['clean_target'] = True
                 else:
                     self.log(logging.ERROR,
                              "has more than one \"clean\" target.", line = i)
-            regexp = re.compile("^fclean:.*$")
+            regexp = re.compile("^fclean[ \t]*:.*$")
             if regexp.search(line) != None:
                 if self.has['fclean_target'] == False:
                     self.has['fclean_target'] = True
                 else:
                     self.log(logging.ERROR,
                              "has more than one \"fclean\" target.", line = i)
-            regexp = re.compile("^re:.*$")
+            regexp = re.compile("^re[ \t]*:.*$")
             if regexp.search(line) != None:
                 if self.has['re_target'] == False:
                     self.has['re_target'] = True
@@ -311,11 +312,12 @@ class ParserMakefile(ParserBase):
             self.log(logging.WARNING,
                 "has a different author({0}) than creator({1}). Suspicious !".format(
                 self.found_author, self.found_created_at['user']))
-        created_time = time.strptime(self.found_created_at['time'], "%Y/%m/%d %H:%M:%S")
-        updated_time = time.strptime(self.found_updated_at['time'], "%Y/%m/%d %H:%M:%S")
-        if updated_time < created_time:
-            self.log(logging.WARNING,
-                    "has an updated timestamp BEFORE the created timestamp. Suspicious !")
+        if self.found_created_at['time'] and self.found_updated_at['time']:
+            created_time = time.strptime(self.found_created_at['time'], "%Y/%m/%d %H:%M:%S")
+            updated_time = time.strptime(self.found_updated_at['time'], "%Y/%m/%d %H:%M:%S")
+            if updated_time < created_time:
+                self.log(logging.WARNING,
+                        "has an updated timestamp BEFORE the created timestamp. Suspicious !")
         if self.context['author'] != None:
             # Check that all the logins found in the Makefile correspond to the author file
             if self.found_author not in self.context['author']['user_names']:
