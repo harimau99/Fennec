@@ -163,7 +163,7 @@ class ParserCSource(ParserCLang):
                 if subline[pos - 1] in "abcdefghijklmnopqrstuvwxyz0123456789_[]()" \
                 and subline[pos + 2] in " \t\n;,[]()":
                     pass
-                elif subline[pos - 1] in " \t\n;,[]()" \
+                elif subline[pos - 1] in " \t\n;,[]()*" \
                 and subline[pos + 2] in "abcdefghijklmnopqrstuvwxyz0123456789_[]()*":
                     pass
                 else:
@@ -174,7 +174,7 @@ class ParserCSource(ParserCLang):
                 if subline[pos - 1] in "abcdefghijklmnopqrstuvwxyz0123456789_[]()" \
                 and subline[pos + 2] in " \t\n;,[]()":
                     pass
-                elif subline[pos - 1] in " \t\n;,[]()" \
+                elif subline[pos - 1] in " \t\n;,[]()*" \
                 and subline[pos + 2] in "abcdefghijklmnopqrstuvwxyz0123456789_[]()*":
                     pass
                 else:

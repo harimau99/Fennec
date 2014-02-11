@@ -6,7 +6,7 @@
 /*   By: ksever <ksever@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2013/12/27 03:26:37 by ksever            #+#    #+#             */
-/*   Updated: 2014/01/17 21:12:29 by ksever           ###   ########.fr       */
+/*   Updated: 2014/02/11 14:52:50 by ksever           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ int		ft_cmd_env(char **argv)
 	while (g_shenv[i])
 	{
 		ft_putendl(g_shenv[i]);
+		*--p1 = *--p2;
 		i++;
 	}
 	return (1);
