@@ -21,7 +21,7 @@ class ParserCLang(ParserBase):
 
     accepted_extensions = [ '.c', '.h' ]
 
-    rules = { }
+    rules = [ ]
 
     @classmethod
     def accepted(klass, filedata):
@@ -33,7 +33,7 @@ class ParserCLang(ParserBase):
         self.found_author = None
         self.found_created_at = { 'user': None, 'time': None }
         self.found_updated_at = { 'user': None, 'time': None }
-        self._remove_specialchars()
+        self._remove_chars()
 
     def check_header(self):
         # check line by line for recipies
@@ -147,30 +147,7 @@ class ParserCLang(ParserBase):
                 self.log(logging.ERROR, "has a missing space after semi column.", line= i)
 
     def check_c_comments(self):
-        is_comment = False
-        for lineidx, line in enumerate(self.content_lines):
-            if '/*' or '*/' in line:
-                lineparse = list(line)
-                for idx, char in enumerate(lineparse):
-                    if char == '/' and lineparse[idx + 1] == '*':
-                        is_comment = True
-                    elif char == '/' and lineparse[idx - 1] == '*':
-                        is_comment = False
-                    elif is_comment \
-                    and not (char == '*' and lineparse[idx - 1] == '/') \
-                    and not (char == '*' and lineparse[idx + 1] == '/'):
-                        lineparse[idx] = '_'
-                self.content_lines[lineidx] = ''.join(lineparse)
-        newfullcontent = list(self.content_full)
-        is_comment = False
-        for idx, char in enumerate(self.content_full):
-            if char == '/' and newfullcontent[idx + 1] == '*':
-                is_comment = True
-            if char == '*' and newfullcontent[idx + 1] == '/':
-                is_comment = False;
-            if is_comment:
-                newfullcontent[idx] = '_'
-        self.content_full = ''.join(newfullcontent)
+        self._remove_comments()
         # now check for C comments in correct places (headers and before functions only)
 
     def check_cpp_comments(self):
@@ -220,35 +197,83 @@ class ParserCLang(ParserBase):
             if regexp.search(line) != None:
                 self.log(logging.ERROR, "has mixed spaces and tabs.", line= i)
 
-    def _remove_specialchars(self):
-        for lineidx, line in enumerate(self.content_lines):
-            is_string = False
-            if '\'' in line:
-                is_char = False
-                newline = list(line)
-                for idx, char in enumerate(line):
-                    if char == '\'' and newline[idx - 1] != '\\':
-                        is_char = True
-                    if is_char and char in ';:,:()"&|></[]{}%#!-_=+':
-                        newline[idx] = '_'
-                self.content_lines[lineidx] = ''.join(newline)
-            if '"' in line:
-                newline = list(line)
-                for idx, char in enumerate(line):
-                    if char == '"' and newline[idx - 1] != '\\':
-                        is_string = not is_string
-                    if is_string and char in ';:,:()&|></[]{}%#!-_=+':
-                        newline[idx] = '_'
-                self.content_lines[lineidx] = ''.join(newline)
-        newfullcontent = list(self.content_full)
+    def _remove_chars(self):
         is_string = False
         is_char = False
+        skip_next = False
+        for lineidx, line in enumerate(self.content_lines):
+            if '\'' or '"' in line:
+                newline = list(line)
+                for idx, char in enumerate(line):
+                    if skip_next == True:
+                        skip_next = False
+                        newline[idx] = '_'
+                        continue
+                    if char == '\\':
+                        skip_next = True
+                        newline[idx] = '_'
+                        continue
+                    if not is_char and char == '"':
+                        is_string = not is_string
+                        continue
+                    if not is_string and char == '\'':
+                        is_char = not is_char
+                        continue
+                    if is_char or is_string:
+                        newline[idx] = '_'
+                self.content_lines[lineidx] = ''.join(newline)
+        is_string = False
+        is_char = False
+        skip_next = False
+        newfullcontent = list(self.content_full)
         for idx, char in enumerate(self.content_full):
-            if char == '\'' and newfullcontent[idx - 1] != '\\':
-                is_char = not is_char
-            if not is_char and char == '"' and newfullcontent[idx - 1] != '\\':
+            if skip_next == True:
+                skip_next = False
+                newfullcontent[idx] = '_'
+                continue
+            if char == '\\':
+                skip_next = True
+                newfullcontent[idx] = '_'
+                continue
+            if not is_char and char == '"':
                 is_string = not is_string
-            if not is_char and is_string and char in ';:,:()&|><[]/{}%#!-_=+':
+                continue
+            if not is_string and char == '\'':
+                is_char = not is_char
+                continue
+            if is_char or is_string:
+                newfullcontent[idx] = '_'
+        self.content_full = ''.join(newfullcontent)
+
+    def _remove_comments(self):
+        is_comment = False
+        for lineidx, line in enumerate(self.content_lines):
+            if '/*' or '*/' in line:
+                newline = list(line)
+                for idx, char in enumerate(line):
+                    if char == '/' and line[idx + 1] == '*':
+                        is_comment = True
+                        continue
+                    if char == '*' and line[idx + 1] == '/':
+                        is_comment = False
+                        newline[idx] = '_'
+                        continue
+                    if is_comment:
+                        newline[idx] = '_'
+                self.content_lines[lineidx] = ''.join(newline)
+        is_comment = False
+        seen_star = False
+        seen_slash = False
+        newfullcontent = list(self.content_full)
+        for idx, char in enumerate(self.content_full):
+            if char == '/' and newfullcontent[idx + 1] == '*':
+                is_comment = True
+                continue
+            if char == '*' and newfullcontent[idx + 1] == '/':
+                is_comment = False
+                newfullcontent[idx] = '_'
+                continue
+            if is_comment:
                 newfullcontent[idx] = '_'
         self.content_full = ''.join(newfullcontent)
 
@@ -256,21 +281,21 @@ class ParserCLang(ParserBase):
         """Save data into context, perform some meta-checks"""
         pass
 
-    rules = {
-                'header'   : check_header,
-                'comments': check_c_comments, #changes comments, should be only after header check
-                'preprocessor_indentation': check_preprocessor_indentation,
-                'commas': check_commas,
-                'semi_columns': check_semi_columns,
-                'cpp_comments': check_cpp_comments,
-                'function prototypes': check_function_prototypes,
-                'capital_letters': check_capital_letters,
-                'bracket_matching': check_bracket_matching,
-                'curly_braces_alone_on_line': check_curly_braces_alone_on_line,
-                'multi_includes': check_multi_includes,
-                'sys_includes': check_system_includes,
-                'mixed_space_tabs': check_mixed_spaces_and_tabs
-            }
+    rules = [
+                ('header', check_header),
+                ('comments', check_c_comments), #changes comments, should be only after header check
+                ('preprocessor_indentation', check_preprocessor_indentation),
+                ('commas', check_commas),
+                ('semi_columns', check_semi_columns),
+                ('cpp_comments', check_cpp_comments),
+                ('function prototypes', check_function_prototypes),
+                ('capital_letters', check_capital_letters),
+                ('bracket_matching', check_bracket_matching),
+                ('curly_braces_alone_on_line', check_curly_braces_alone_on_line),
+                ('multi_includes', check_multi_includes),
+                ('sys_includes', check_system_includes),
+                ('mixed_space_tabs', check_mixed_spaces_and_tabs)
+            ]
 
 name = 'parser_c_lang'
 parser = ParserCLang

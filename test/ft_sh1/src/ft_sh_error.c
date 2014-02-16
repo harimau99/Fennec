@@ -6,7 +6,7 @@
 /*   By: ksever <ksever@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2013/12/27 15:44:43 by ksever            #+#    #+#             */
-/*   Updated: 2014/01/03 14:36:09 by ksever           ###   ########.fr       */
+/*   Updated: 2014/02/16 22:02:20 by ksever           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,6 +85,7 @@ static char		*g_errors[] =
 	"Too many users",
 	"Disc quota exceeded",
 	"Stale NFS file handle",
+	'"',
 	"Too many levels of remote in path",
 	"RPC struct is bad",
 	"RPC version wrong",

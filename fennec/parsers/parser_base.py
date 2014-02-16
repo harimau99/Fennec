@@ -12,7 +12,7 @@ class ParserBase(object):
 
     accepted_extensions = [ None ]
 
-    rules = { }
+    rules = [ ]
 
     @classmethod
     def accepted(klass, filedata):
@@ -77,7 +77,7 @@ class ParserBase(object):
         pass
 
     def audit(self):
-        for rulename, rulefunct in self.rules.iteritems():
+        for rulename, rulefunct in self.rules:
             rulefunct(self)
         self.post_process()
 

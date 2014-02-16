@@ -24,7 +24,7 @@ class ParserMakefile(ParserBase):
 
     accepted_extensions = [ None ]
 
-    rules = { }
+    rules = [ ]
 
     @classmethod
     def accepted(klass, filedata):
@@ -336,12 +336,13 @@ class ParserMakefile(ParserBase):
         }
         self.context['makefile'].append(makefile_info)
 
-    rules = { 'header'   : check_header,
-              'base_rules': check_base_rules,
-              'use_flags': check_use_of_Wflags,
-              'phony_rule': check_rule_dotPHONY,
-              'wildcards': check_wildcards
-            }
+    rules = [
+              ('header', check_header),
+              ('base_rules', check_base_rules),
+              ('use_flags', check_use_of_Wflags),
+              ('phony_rule', check_rule_dotPHONY),
+              ('wildcards', check_wildcards)
+            ]
 
 
 name = 'parser_makefile'

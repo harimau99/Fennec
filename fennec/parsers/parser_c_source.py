@@ -20,7 +20,7 @@ class ParserCSource(ParserCLang):
 
     accepted_extensions = [ '.c' ]
 
-    rules = { }
+    rules = [ ]
 
     @classmethod
     def accepted(klass, filedata):
@@ -28,7 +28,7 @@ class ParserCSource(ParserCLang):
 
     def __init__(self, context, settings, node):
         super(ParserCSource, self).__init__(context, settings, node)
-        super(ParserCSource, self).check_c_comments()
+        super(ParserCSource, self)._remove_comments()
 
     def check_forbidden_keywords(self):
         i = 0
@@ -216,16 +216,16 @@ class ParserCSource(ParserCLang):
         """Save data into context, perform some meta-checks"""
         pass
 
-    rules = {
-                'forbidden_keywords': check_forbidden_keywords,
-                'spaces_around_operators': check_spaces_around_operators,
-                'spaces_after_keywords': check_spaces_after_keywords,
-                'no_spaces_unary_operators': check_no_spaces_unary_operators,
-                'max_function_length': check_max_function_length,
-                'function_spacing': check_function_spacing,
-                'max_functions_per_file': check_max_functions_per_file,
-                'var_initializations': check_var_initializations,
-            }
+    rules = [
+                ('forbidden_keywords', check_forbidden_keywords),
+                ('spaces_around_operators', check_spaces_around_operators),
+                ('spaces_after_keywords', check_spaces_after_keywords),
+                ('no_spaces_unary_operators', check_no_spaces_unary_operators),
+                ('max_function_length', check_max_function_length),
+                ('function_spacing', check_function_spacing),
+                ('max_functions_per_file', check_max_functions_per_file),
+                ('var_initializations', check_var_initializations)
+            ]
 
 
 name = 'parser_c_source'

@@ -20,7 +20,7 @@ class ParserCHeaders(ParserCLang):
 
     accepted_extensions = [ '.h' ]
 
-    rules = { }
+    rules = [ ]
 
     @classmethod
     def accepted(klass, filedata):
@@ -64,17 +64,17 @@ class ParserCHeaders(ParserCLang):
         """Save data into context, perform some meta-checks"""
         pass
 
-    rules = {
-                'double_inclusion' : check_double_inclusion,
-                'simple_defines': check_simple_defines,
-                'structs': check_structs,
-                'enums': check_enums,
-                'unions': check_unions,
-                'externals': check_externals,
-                'globals': check_globals,
-                'typedefs': check_typedefs,
-                'cleanliness': check_cleanliness
-            }
+    rules = [
+                ('double_inclusion', check_double_inclusion),
+                ('simple_defines', check_simple_defines),
+                ('structs', check_structs),
+                ('enums', check_enums),
+                ('unions', check_unions),
+                ('externals', check_externals),
+                ('globals', check_globals),
+                ('typedefs', check_typedefs),
+                ('cleanliness', check_cleanliness),
+            ]
 
 
 name = 'parser_c_headers'

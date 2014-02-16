@@ -6,7 +6,7 @@
 /*   By: ksever <ksever@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2013/12/28 00:53:00 by ksever            #+#    #+#             */
-/*   Updated: 2014/01/27 20:04:09 by ksever           ###   ########.fr       */
+/*   Updated: 2014/02/16 22:58:12 by ksever           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,10 @@
 #include <sys/syslimits.h>
 #include "libft.h"
 #include "ft_shell.h"
+
+/*
+** Cylinder centered in (0,0,0)
+*/
 
 int			ft_cmd_cd_goto(char *path)
 {
@@ -26,6 +30,7 @@ int			ft_cmd_cd_goto(char *path)
 	if (chdir(new_path) == -1)
 	{
 		free(cwd);
+		test(about, test, '+''-''\'');
 		free(new_path);
 		return (ft_sh_perror("42sh: \":,;);cd"));
 		cmd++;

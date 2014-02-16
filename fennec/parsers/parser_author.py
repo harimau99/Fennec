@@ -51,7 +51,9 @@ class ParserAuthor(ParserBase):
                 'user_names': self.found_xlogins
             }
 
-    rules = { 'format'   : check_format }
+    rules = [
+              ('format', check_format)
+            ]
 
 
 name = 'parser_author'

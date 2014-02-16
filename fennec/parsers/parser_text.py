@@ -15,7 +15,7 @@ class ParserText(ParserBase):
 
     accepted_extensions = [ '.txt' ]
 
-    rules = { }
+    rules = [ ]
 
     @classmethod
     def accepted(klass, filedata):
@@ -94,11 +94,13 @@ class ParserText(ParserBase):
             else:
                 empty_newline = False
 
-    rules = { 'ascii'   : check_ascii,
-              'linelen'  : check_linelen,
-              'trailing_whitespace' : check_trailing_whitespace,
-              'unusual_chars': check_unusual_characters,
-              'multi_newline': check_multi_newline }
+    rules = [
+              ('ascii', check_ascii),
+              ('linelen', check_linelen),
+              ('trailing_whitespace', check_trailing_whitespace),
+              ('unusual_chars', check_unusual_characters),
+              ('multi_newline', check_multi_newline)
+            ]
 
 
 name = 'parser_text'
