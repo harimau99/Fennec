@@ -160,22 +160,22 @@ class ParserCSource(ParserCLang):
             if '++' in line:
                 pos = line.find('++')
                 subline = list(line)
-                if subline[pos - 1] in "abcdefghijklmnopqrstuvwxyz0123456789_[]()" \
-                and subline[pos + 2] in " \t\n;,[]()":
+                if subline[pos - 1] in "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_" \
+                and subline[pos + 2] in " \t\n;,[]()!":
                     pass
-                elif subline[pos - 1] in " \t\n;,[]()*" \
-                and subline[pos + 2] in "abcdefghijklmnopqrstuvwxyz0123456789_[]()*":
+                elif subline[pos - 1] in " \t\n;,[]()*!" \
+                and subline[pos + 2] in "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_*":
                     pass
                 else:
                     self.log(logging.ERROR, "has invalid format for ++ operator (no spaces, ...).", line = i)
             if '--' in line:
                 pos = line.find('--')
                 subline = list(line)
-                if subline[pos - 1] in "abcdefghijklmnopqrstuvwxyz0123456789_[]()" \
-                and subline[pos + 2] in " \t\n;,[]()":
+                if subline[pos - 1] in "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_" \
+                and subline[pos + 2] in " \t\n;,[]()!":
                     pass
-                elif subline[pos - 1] in " \t\n;,[]()*" \
-                and subline[pos + 2] in "abcdefghijklmnopqrstuvwxyz0123456789_[]()*":
+                elif subline[pos - 1] in " \t\n;,[]()*!" \
+                and subline[pos + 2] in "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_*":
                     pass
                 else:
                     self.log(logging.ERROR, "has invalid format for -- operator (no spaces, ...).", line = i)

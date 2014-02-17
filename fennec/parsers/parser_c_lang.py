@@ -154,8 +154,7 @@ class ParserCLang(ParserBase):
         i = 0
         for line in self.content_lines:
             i += 1
-            regexp = re.compile("^.*(//).*$")
-            if regexp.search(line) != None:
+            if '//' in line:
                 self.log(logging.ERROR, "has a C++ comment (//).", line= i)
 
     def check_function_prototypes(self):
