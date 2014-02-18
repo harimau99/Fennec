@@ -148,10 +148,14 @@ class ParserCSource(ParserCLang):
         i = 0
         for line in self.content_lines:
             i += 1
-            regexp = re.compile("[ |\t|\(|\)|{|}](if|else|return|while)[^ |\n]")
+            regexp = re.compile("[ |\t|\(|\)|{|}](if|else|return|break|continue|while)[^ |\n]")
             result = regexp.findall(line)
             if result:
                 self.log(logging.ERROR, "has no spaces after keyword (if, else, return, while).", line = i)
+            regexp = re.compile("[ |\t|\(|\)|{|}]*(static|typedef|exern)[^ ]")
+            result = regexp.findall(line)
+            if result:
+                self.log(logging.ERROR, "has no spaces after keyword (static, typedef, extern).", line = i)
 
     def check_no_spaces_unary_operators(self):
         i = 0
