@@ -90,18 +90,23 @@ class ParserMakefile(ParserBase):
                 else:
                     lines_checked += 1
             if i == 6:
-                regexp = re.compile("^# {4}By: ([a-z-]{3,8}) <([a-z-]{3,8})@student\.42\.fr> {10,20}\+#\+  \+:\+ {7}\+#\+ {9}#\n$")
+                regexp = re.compile("^# {4}By: ([a-z-]{3,8}) <((.+)@.+)> {1,30}\+#\+  \+:\+ {7}\+#\+ {9}#\n$")
                 author_test = regexp.findall(line)
                 if not author_test:
                     self.log(logging.ERROR,
                         "doesn't have a properly formatted author header", line= i)
                 else:
-                    xlogin1, xlogin2 = author_test[0]
-                    if xlogin1 != xlogin2:
-                        self.log(logging.ERROR,
-                            "the login and email aren't the same", line= i)
+                    xlogin1, mail1, xlogin2 = author_test[0]
+                    if xmail1.endswith("42.fr"):
+                        if xlogin2 != 'marvin' and xlogin1 != xlogin2:
+                            self.log(logging.ERROR,
+                                "the login and email aren't the same", line= i)
+                        else:
+                            self.found_author = xlogin1
+                            lines_checked += 1
                     else:
-                        self.found_author = xlogin1
+                        if xlogin1 != 'marvin':
+                            self.found_author = xlogin1
                         lines_checked += 1
             if i == 7:
                 regexp = re.compile("^# {49}\+#\+#\+#\+#\+#\+   \+#\+ {12}#\n$")
