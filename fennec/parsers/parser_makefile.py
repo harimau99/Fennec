@@ -96,7 +96,7 @@ class ParserMakefile(ParserBase):
                     self.log(logging.ERROR,
                         "doesn't have a properly formatted author header", line= i)
                 else:
-                    xlogin1, mail1, xlogin2 = author_test[0]
+                    xlogin1, xmail1, xlogin2 = author_test[0]
                     if xmail1.endswith("42.fr"):
                         if xlogin2 != 'marvin' and xlogin1 != xlogin2:
                             self.log(logging.ERROR,
