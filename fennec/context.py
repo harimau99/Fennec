@@ -49,11 +49,13 @@ class Context(object):
         if (os.environ.get('GROUP') != None):
             self.user_group = os.environ.get('GROUP')
         else:
+            self.user_group = "2013" #maybe there is a smarter way...
             self.logger.warning("There is no GROUP environment variable !"
                                 " You should check your shell !")
         if (os.environ.get('MAIL') != None):
             self.user_mail = os.environ.get('MAIL')
         else:
+            self.user_mail = "{}@student.42.fr".format(self.user_name)
             self.logger.warning("There is no MAIL environment variable !"
                                 " You should check your shell !")
 
